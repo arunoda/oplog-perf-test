@@ -7,22 +7,27 @@ setInterval(function() {
 }, 2000);
 
 if(Meteor.isClient) {
+  function startMethodLoadTest() {
+    setInterval(function() {
+      for(var lc=0; lc<1; lc++) {
+        var start = Date.now();
+        Meteor.call('go', function() {
+          latency.total += Date.now() - start;
+          latency.count++;
+        });
+      }
+    }, 15);
+  }
+
   Start = function() {
     var totalSubs = 100;
+
     function addSub() {
       Meteor.subscribe('item', function() {
         totalSubs--;
         if(totalSubs === 0) {
           console.log("Subs Added!");
-          setInterval(function() {
-            for(var lc=0; lc<1; lc++) {
-              var start = Date.now();
-              Meteor.call('go', function() {
-                latency.total += Date.now() - start;
-                latency.count++;
-              });
-            }
-          }, 15);
+          startMethodLoadTest();
         } else {
           addSub();
         }
@@ -30,8 +35,6 @@ if(Meteor.isClient) {
     }
 
     addSub();
-
-
   };
 }
 
