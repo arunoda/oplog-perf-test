@@ -13,7 +13,7 @@ if(Meteor.isClient) {
       Meteor.subscribe('item', function() {
         totalSubs--;
         if(totalSubs === 0) {
-          console.log("Adds Added!");
+          console.log("Subs Added!");
           setInterval(function() {
             for(var lc=0; lc<1; lc++) {
               var start = Date.now();
